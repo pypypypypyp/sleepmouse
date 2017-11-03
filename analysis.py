@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import csv_manager as cm
 
 def main():
+  save_prefix = "analysis/mouse4/"
   sampling_freq = 250
-  data = cm.csv_reader("data/mouse1.csv", 0)
+  data = cm.csv_reader("data/mouse4.csv", 0)
   segment_sec = 6
   #segment_num = sampling_freq * segment_sec
   segment_num = 1024
@@ -44,7 +45,7 @@ def main():
     plt.ylabel('P')
     plt.tight_layout()
 
-    plt.savefig('test/%s.png' % title)
+    plt.savefig('%s%s.png' % (save_prefix, title))
     print('saving figure%d' %segment_begin)
     plt.clf()
 
@@ -58,7 +59,7 @@ def main():
     fft_log.append([segment_begin, absolute])
 
 
-  with open("data/full.csv", 'w') as f:
+  with open(save_prefix + "full.csv", 'w') as f:
     #f.write("segment_begin, absolute\n")
     for row in fft_log:
       all_absolute_data = ', '.join(map(str,row[1]))
