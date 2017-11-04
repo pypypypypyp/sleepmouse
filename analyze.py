@@ -138,21 +138,64 @@ def find_observation(mouse_id):
         bopen = boxopen(mouse_id)
         copen = boxopen(mouse_id)
         b_inject, b_score, c_inject, c_score = read_results()
+        b_inject[mouse_id-1].append(b_inject[mouse_id-1][-1]+10)
+        c_inject[mouse_id-1].append(c_inject[mouse_id-1][-1]+10)
+        if mouse_id==3: b_inject[2][-1]+=5
+        if mouse_id==4: b_inject[3][-1]-=5; c_inject[3][-1]+=3
+        
         b_obs = []
-        for binj in b_inject[mouse_id-1]:
-                start = max([i for i in bopen if int(binj*10)-30 < int(i*10) and int(i*10) < int(binj*10)+30])
-                end = min([i for i in bopen if int(binj*10+100)-30 < int(i*10) and int(i*10) < int(binj*10+100)+30])
-                b_obs.append((start+0.1, end-0.1))
+        for bind in range(len(b_inject[mouse_id-1])-1):
+                start = max([i for i in bopen if int(b_inject[mouse_id-1][bind]*10)-30 < int(i*10) and int(i*10) < int(b_inject[mouse_id-1][bind]*10)+30])
+                end = min([i for i in bopen if int(b_inject[mouse_id-1][bind+1]*10)-30 < int(i*10) and int(i*10) < int(b_inject[mouse_id-1][bind+1]*10)+30])
+                b_obs.append((round(start+0.1), round(end-0.1)))
         c_obs = []
-        for cinj in c_inject[mouse_id-1]:
-                start = max([i for i in copen if int(cinj*10)-30 < int(i*10) and int(i*10) < int(cinj*10)+30])
-                end = min([i for i in copen if int(cinj*10+100)-30 < int(i*10) and int(i*10) < int(cinj*10+100)+30])
-                c_obs.append((start+0.1, end-0.1))
+        for cind in range(len(c_inject[mouse_id-1])-1):
+                start = max([i for i in copen if int(c_inject[mouse_id-1][cind]*10)-35 < int(i*10) and int(i*10) < int(c_inject[mouse_id-1][cind]*10)+35])
+                end = min([i for i in copen if int(c_inject[mouse_id-1][cind+1]*10)-30 < int(i*10) and int(i*10) < int(c_inject[mouse_id-1][cind+1]*10)+30])
+                c_obs.append((round(start+0.1), round(end-0.1)))
         return b_obs, c_obs
 
 def analyze():
-        b_inject, B_SCORE, c_inject, C_SCORE = read_results()
-        print find_observation(1)
+        b_inject, b_score, c_inject, c_score = read_results()
+        A_SCORE_MOUSE1 = A_SCORE_MOUSE2 = A_SCORE_MOUSE3 = A_SCORE_MOUSE4 = [0]
+        B_SCORE_MOUSE1 = b_score[0]
+        B_SCORE_MOUSE2 = b_score[1]
+        B_SCORE_MOUSE3 = b_score[2]
+        B_SCORE_MOUSE4 = b_score[3]
+        C_SCORE_MOUSE1 = c_score[0]
+        C_SCORE_MOUSE2 = c_score[1]
+        C_SCORE_MOUSE3 = c_score[2]
+        C_SCORE_MOUSE4 = c_score[3]
+        obs1 = find_observation(1)
+        obs2 = find_observation(2)
+        obs3 = find_observation(3)
+        obs4 = find_observation(4)
+        A_OBS_MOUSE1 = A_OBS_MOUSE2 = A_OBS_MOUSE3 = A_OBS_MOUSE4 = [(0.0, 65.0)]
+        B_OBS_MOUSE1 = obs1[0]
+        B_OBS_MOUSE2 = obs2[0]
+        B_OBS_MOUSE3 = obs3[0]
+        B_OBS_MOUSE4 = obs4[0]
+        C_OBS_MOUSE1 = obs1[1]
+        C_OBS_MOUSE2 = obs2[1]
+        C_OBS_MOUSE3 = obs3[1]
+        C_OBS_MOUSE4 = obs4[1]
+        print "--------------DATA-------------"
+        print "Chamber 1"
+        print "OBSERVATION\t\tSCORE"
+        for i in range(len(A_OBS_MOUSE1+B_OBS_MOUSE1+C_OBS_MOUSE1)):
+                print (A_OBS_MOUSE1 + B_OBS_MOUSE1 + C_OBS_MOUSE1)[i],"\t\t",(A_SCORE_MOUSE1 + B_SCORE_MOUSE1 + C_SCORE_MOUSE1)[i] 
+        print "Chamber 2"
+        print "OBSERVATION\t\tSCORE"
+        for i in range(len(A_OBS_MOUSE2+B_OBS_MOUSE2+C_OBS_MOUSE2)):
+                print (A_OBS_MOUSE2 + B_OBS_MOUSE2 + C_OBS_MOUSE2)[i],"\t\t",(A_SCORE_MOUSE2 + B_SCORE_MOUSE2 + C_SCORE_MOUSE2)[i] 
+        print "Chamber 3"
+        print "OBSERVATION\t\tSCORE"
+        for i in range(len(A_OBS_MOUSE3+B_OBS_MOUSE3+C_OBS_MOUSE3)):
+                print (A_OBS_MOUSE3 + B_OBS_MOUSE3 + C_OBS_MOUSE3)[i],"\t\t",(A_SCORE_MOUSE3 + B_SCORE_MOUSE3 + C_SCORE_MOUSE3)[i] 
+        print "Chamber 4"
+        print "OBSERVATION\t\tSCORE"
+        for i in range(len(A_OBS_MOUSE4+B_OBS_MOUSE4+C_OBS_MOUSE4)):
+                print (A_OBS_MOUSE4 + B_OBS_MOUSE4 + C_OBS_MOUSE4)[i],"\t\t",(A_SCORE_MOUSE4 + B_SCORE_MOUSE4 + C_SCORE_MOUSE4)[i] 
 
 if "--output" in sys.argv: output_images()
 if "--analyze" in sys.argv: analyze()
